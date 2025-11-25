@@ -1,15 +1,20 @@
 {
-    "Effect": "Deny",
-    "Action": "iam:AttachRolePolicy",
-    "Resource": "*",
-    "Condition": {
-        "StringNotLike": {
-            "iam:PolicyARN": [
-                "arn:aws:iam::*:policy/AmazonEC2ContainerRegistryFullAccess",
-                "arn:aws:iam::*:policy/AmazonEC2ContainerRegistryPowerUser",
-                "arn:aws:iam::*:policy/usercreationrestriction",
-                "arn:aws:iam::*:policy/AmazonECSTaskExecutionRolePolicy"
-            ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Deny",
+            "Action": "iam:AttachRolePolicy",
+            "Resource": "*",
+            "Condition": {
+                "StringNotLike": {
+                    "iam:PolicyARN": [
+                        "arn:aws:iam::*:policy/AmazonEC2ContainerRegistryFullAccess",
+                        "arn:aws:iam::*:policy/AmazonEC2ContainerRegistryPowerUser",
+                        "arn:aws:iam::*:policy/usercreationrestriction",
+                        "arn:aws:iam::*:policy/AmazonECSTaskExecutionRolePolicy"
+                    ]
+                }
+            }
         }
-    }
+    ]
 }
