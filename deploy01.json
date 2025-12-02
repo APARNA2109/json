@@ -61,6 +61,7 @@
         "diagnosticsProfile": { "bootDiagnostics": { "enabled": true } }
       }
     },
+
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2022-11-01",
@@ -142,6 +143,25 @@
             }
           }
         ]
+      }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'), '/InstallGUIandVBox')]",
+      "apiVersion": "2023-03-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "commandToExecute": "apt update -y && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop virtualbox virtualbox-ext-pack xrdp -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" && systemctl enable xrdp && adduser xrdp ssl-cert && reboot"
+        }
       }
     }
   ],
