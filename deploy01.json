@@ -143,31 +143,6 @@
           }
         ]
       }
-    },
-
-    // THIS IS THE NEW – INSTALLS XFCE4 + XRDP AUTOMATICALLY
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2022-03-01",
-      "name": "[concat(variables('vmName'), '/InstallGUI')]",
-      "location": "[variables('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.1",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "https://raw.githubusercontent.com/azure/azvmimagebuilder/master/solutions/14-Custom-Script-Extension/xRDP/install-xrdp-ubuntu.sh"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "bash install-xrdp-ubuntu.sh"
-        }
-      }
     }
   ],
   "outputs": {
