@@ -11,7 +11,7 @@
     "vmName": "labvm",
     "vmSize": "Standard_B4ms",
     "storageAccountType": "Standard_LRS",
-    "osDiskSizeGB": 64,
+    "osDiskSizeGB": 50,
     "networkSecurityGroupName": "[concat('nsg-', parameters('DeploymentID'))]",
     "virtualNetworkName": "[concat('vnet-', parameters('DeploymentID'))]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
