@@ -25,9 +25,9 @@
     "networkInterfaceName": "[concat('nic-', parameters('DeploymentID'))]",
     "publicIpAddressName": "[concat('pip-', parameters('DeploymentID'))]",
     "ubuntuImage": {
-      "publisher": "canonical",
-      "offer": "0001-com-ubuntu-server-noble",
-      "sku": "24_04-lts",
+      "publisher": "Canonical",
+      "offer": "0001-com-ubuntu-server-jammy",
+      "sku": "22_04-lts-gen2",
       "version": "latest"
     }
   },
