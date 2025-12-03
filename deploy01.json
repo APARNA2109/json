@@ -27,7 +27,7 @@
     "ubuntuImage": {
       "publisher": "canonical",
       "offer": "0001-com-ubuntu-server-noble",
-      "sku": "24_04-lts-gen2",
+      "sku": "24_04-lts",
       "version": "latest"
     }
   },
