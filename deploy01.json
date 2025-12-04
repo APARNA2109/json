@@ -3,13 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "type": "String"
+      "type": "string",
+      "metadata": { "description": "Admin username for the VM" }
     },
     "adminPassword": {
-      "type": "SecureString"
+      "type": "securestring",
+      "metadata": { "description": "Admin password for the VM" }
     },
     "DeploymentID": {
-      "type": "String"
+      "type": "string",
+      "metadata": { "description": "Unique ID for this deployment (e.g. mylab01)" }
     }
   },
   "variables": {
@@ -26,8 +29,8 @@
     "publicIpAddressName": "[concat('pip-', parameters('DeploymentID'))]",
     "ubuntuImage": {
       "publisher": "Canonical",
-      "offer": "0001-com-ubuntu-server-jammy",
-      "sku": "22_04-lts-gen2",
+      "offer": "0001-com-ubuntu-server-noble",
+      "sku": "24_04-lts",
       "version": "latest"
     }
   },
@@ -61,7 +64,9 @@
         },
         "networkProfile": {
           "networkInterfaces": [
-            { "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]" }
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
           ]
         },
         "diagnosticsProfile": { "bootDiagnostics": { "enabled": true } }
@@ -96,11 +101,15 @@
             "properties": {
               "subnet": { "id": "[variables('subnetRef')]" },
               "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]" }
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+              }
             }
           }
         ],
-        "networkSecurityGroup": { "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]" }
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        }
       }
     },
     {
@@ -153,19 +162,15 @@
   ],
   "outputs": {
     "DeploymentID": {
-      "type": "String",
+      "type": "string",
       "value": "[parameters('DeploymentID')]"
     },
     "VM Admin Username": {
-      "type": "String",
+      "type": "string",
       "value": "[parameters('adminUsername')]"
     },
-    "VM Admin Password": {
-      "type": "String",
-      "value": "[parameters('adminPassword')]"
-    },
     "Linux DNS Name": {
-      "type": "String",
+      "type": "string",
       "value": "[reference(resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))).dnsSettings.fqdn]"
     }
   }
