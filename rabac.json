@@ -1,0 +1,42 @@
+{
+  "Name": "Spektra AI-900 Combined RBAC",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Combined RBAC role for AI-900 lab covering all modules.",
+  "Actions": [
+    "Microsoft.CognitiveServices/register/action",
+    "Microsoft.CognitiveServices/accounts/*",
+    "Microsoft.CognitiveServices/accounts/projects/*",
+    "Microsoft.CognitiveServices/locations/*/read",
+
+    "Microsoft.MachineLearningServices/workspaces/*",
+    "Microsoft.MachineLearningServices/workspaces/onlineEndpoints/*",
+
+    "Microsoft.KeyVault/vaults/*",
+
+    "Microsoft.Storage/storageAccounts/*",
+
+    "Microsoft.Search/searchServices/*",
+
+    "Microsoft.ContainerInstance/containerGroups/*",
+    "Microsoft.ContainerRegistry/registries/*",
+    "Microsoft.ContainerRegistry/registries/taskRuns/write",
+
+    "Microsoft.Insights/components/*",
+    "Microsoft.Insights/alertRules/*",
+    "microsoft.insights/actiongroups/*",
+    "microsoft.alertsmanagement/smartDetectorAlertRules/*",
+
+    "Microsoft.OperationalInsights/workspaces/*",
+
+    "Microsoft.Resources/deployments/*",
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/write"
+  ],
+  "NotActions": [
+    "Microsoft.Authorization/*/read"
+  ],
+  "DataActions": [
+    "Microsoft.CognitiveServices/*"
+  ]
+}
