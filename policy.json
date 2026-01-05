@@ -118,7 +118,7 @@
                   ]
                 },
                 {
-                  "field": "Microsoft.MachineLearningServices/workspaces/computes/properties.vmSize",
+                  "field": "Microsoft.MachineLearningServices/workspaces/computes/vmSize",
                   "in": [
                     "Standard_DS11_v2"
                   ]
