@@ -10,9 +10,7 @@
           {
             "not": {
               "field": "Microsoft.KeyVault/vaults/sku.name",
-              "in": [
-                "Standard"
-              ]
+              "in": ["Standard"]
             }
           }
         ]
@@ -26,25 +24,7 @@
           {
             "not": {
               "field": "Microsoft.Storage/storageAccounts/sku.name",
-              "in": [
-                "Standard_LRS"
-              ]
-            }
-          }
-        ]
-      },
-      {
-        "allOf": [
-          {
-            "field": "type",
-            "equals": "Microsoft.MachineLearningServices/workspaces"
-          },
-          {
-            "not": {
-              "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
-              "in": [
-                "DS11_V2"
-              ]
+              "in": ["Standard_LRS"]
             }
           }
         ]
@@ -58,9 +38,7 @@
           {
             "not": {
               "field": "Microsoft.ContainerRegistry/registries/sku.name",
-              "in": [
-                "Basic"
-              ]
+              "in": ["Basic"]
             }
           }
         ]
@@ -74,9 +52,35 @@
           {
             "not": {
               "field": "Microsoft.Search/searchServices/sku.name",
-              "in": [
-                "Basic"
-              ]
+              "in": ["Basic"]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.MachineLearningServices/workspaces"
+          },
+          {
+            "not": {
+              "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
+              "in": ["Basic", "Enterprise"]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.MachineLearningServices/workspaces/computes"
+          },
+          {
+            "not": {
+              "field": "Microsoft.MachineLearningServices/workspaces/computes/sku.name",
+              "in": ["Standard_DS11_v2"]
             }
           }
         ]
