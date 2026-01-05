@@ -10,46 +10,66 @@
             { "field": "type", "like": "Microsoft.KeyVault/vaults/*" },
             { "field": "type", "like": "Microsoft.Storage/storageAccounts/*" },
             { "field": "type", "like": "Microsoft.Search/searchServices/*" },
-
             { "field": "type", "like": "Microsoft.ContainerRegistry/registries/*" },
             { "field": "type", "like": "Microsoft.ContainerInstance/containerGroups/*" },
             { "field": "type", "like": "Microsoft.Insights/components/*" },
             { "field": "type", "like": "Microsoft.OperationalInsights/workspaces/*" },
             { "field": "type", "like": "microsoft.insights/actiongroups/*" },
-            { "field": "type", "like": "microsoft.alertsmanagement/smartDetectorAlertRules/*" },
-
-            {
-              "field": "type",
-              "in": [
-                "Microsoft.CognitiveServices/accounts",
-                "Microsoft.CognitiveServices/accounts/projects",
-                "Microsoft.MachineLearningServices/workspaces",
-                "Microsoft.KeyVault/vaults",
-                "Microsoft.Storage/storageAccounts",
-                "Microsoft.Search/searchServices",
-                "Microsoft.ContainerRegistry/registries",
-                "Microsoft.ContainerInstance/containerGroups",
-                "Microsoft.Insights/components",
-                "Microsoft.OperationalInsights/workspaces"
-              ]
-            }
+            { "field": "type", "like": "microsoft.alertsmanagement/smartDetectorAlertRules/*" }
           ]
         }
       },
       {
         "allOf": [
           { "field": "type", "equals": "Microsoft.KeyVault/vaults" },
-          { "field": "Microsoft.KeyVault/vaults/sku.name", "notIn": ["Standard"] }
+          {
+            "not": {
+              "field": "Microsoft.KeyVault/vaults/sku.name",
+              "in": ["Standard"]
+            }
+          }
         ]
       },
       {
         "allOf": [
-          { "source": "action", "equals": "Microsoft.Storage/storageAccounts/write" },
           { "field": "type", "equals": "Microsoft.Storage/storageAccounts" },
           {
             "not": {
               "field": "Microsoft.Storage/storageAccounts/sku.name",
               "in": ["Standard_LRS"]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          { "field": "type", "equals": "Microsoft.MachineLearningServices/workspaces" },
+          {
+            "not": {
+              "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
+              "in": ["DS11_V2"]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          { "field": "type", "equals": "Microsoft.ContainerRegistry/registries" },
+          {
+            "not": {
+              "field": "Microsoft.ContainerRegistry/registries/sku.name",
+              "in": ["Basic"]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          { "field": "type", "equals": "Microsoft.Search/searchServices" },
+          {
+            "not": {
+              "field": "Microsoft.Search/searchServices/sku.name",
+              "in": ["Basic"]
             }
           }
         ]
