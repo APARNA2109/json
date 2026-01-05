@@ -75,16 +75,20 @@
         "allOf": [
           {
             "field": "type",
-            "equals": "Microsoft.MachineLearningServices/workspaces/computes"
-          },
-          {
-            "field": "Microsoft.MachineLearningServices/workspaces/computes/computeType",
-            "in": ["AmlCompute", "ComputeInstance"]
+            "like": "Microsoft.MachineLearningServices/workspaces/computes*"
           },
           {
             "not": {
-              "field": "Microsoft.MachineLearningServices/workspaces/computes/vmSize",
-              "in": ["Standard_DS11_v2"]
+              "anyOf": [
+                {
+                  "field": "Microsoft.MachineLearningServices/workspaces/computes/sku.name",
+                  "in": ["Standard_DS11_v2"]
+                },
+                {
+                  "field": "Microsoft.MachineLearningServices/workspaces/computes/properties.vmSize",
+                  "in": ["Standard_DS11_v2"]
+                }
+              ]
             }
           }
         ]
