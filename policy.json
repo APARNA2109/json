@@ -2,46 +2,16 @@
   "if": {
     "anyOf": [
       {
-        "not": {
-          "anyOf": [
-            {
-              "field": "type",
-              "like": "Microsoft.KeyVault/vaults/*"
-            },
-            {
-              "field": "type",
-              "like": "Microsoft.Storage/storageAccounts/*"
-            },
-            {
-              "field": "type",
-              "like": "Microsoft.ContainerRegistry/registries/*"
-            },
-            {
-              "field": "type",
-              "like": "Microsoft.Search/searchServices/*"
-            },
-            {
-              "field": "type",
-              "like": "Microsoft.MachineLearningServices/workspaces/*"
-            },
-            {
-              "field": "type",
-              "like": "Microsoft.MachineLearningServices/workspaces/computes/*"
-            }
-          ]
-        }
-      },
-      {
         "allOf": [
           {
             "field": "type",
             "equals": "Microsoft.KeyVault/vaults"
           },
           {
-            "field": "Microsoft.KeyVault/vaults/sku.name",
-            "notIn": [
-              "Standard"
-            ]
+            "not": {
+              "field": "Microsoft.KeyVault/vaults/sku.name",
+              "in": ["Standard"]
+            }
           }
         ]
       },
@@ -52,10 +22,10 @@
             "equals": "Microsoft.Storage/storageAccounts"
           },
           {
-            "field": "Microsoft.Storage/storageAccounts/sku.name",
-            "notIn": [
-              "Standard_LRS"
-            ]
+            "not": {
+              "field": "Microsoft.Storage/storageAccounts/sku.name",
+              "in": ["Standard_LRS"]
+            }
           }
         ]
       },
@@ -66,10 +36,10 @@
             "equals": "Microsoft.ContainerRegistry/registries"
           },
           {
-            "field": "Microsoft.ContainerRegistry/registries/sku.name",
-            "notIn": [
-              "Basic"
-            ]
+            "not": {
+              "field": "Microsoft.ContainerRegistry/registries/sku.name",
+              "in": ["Basic"]
+            }
           }
         ]
       },
@@ -80,10 +50,10 @@
             "equals": "Microsoft.Search/searchServices"
           },
           {
-            "field": "Microsoft.Search/searchServices/sku.name",
-            "notIn": [
-              "Basic"
-            ]
+            "not": {
+              "field": "Microsoft.Search/searchServices/sku.name",
+              "in": ["Basic"]
+            }
           }
         ]
       },
@@ -94,11 +64,10 @@
             "equals": "Microsoft.MachineLearningServices/workspaces"
           },
           {
-            "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
-            "notIn": [
-              "Basic",
-              "Enterprise"
-            ]
+            "not": {
+              "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
+              "in": ["Basic", "Enterprise"]
+            }
           }
         ]
       },
@@ -106,24 +75,12 @@
         "allOf": [
           {
             "field": "type",
-            "like": "Microsoft.MachineLearningServices/workspaces/computes/*"
+            "equals": "Microsoft.MachineLearningServices/workspaces/computes"
           },
           {
             "not": {
-              "anyOf": [
-                {
-                  "field": "Microsoft.MachineLearningServices/workspaces/computes/sku.name",
-                  "in": [
-                    "Standard_DS11_v2"
-                  ]
-                },
-                {
-                  "field": "Microsoft.MachineLearningServices/workspaces/computes/vmSize",
-                  "in": [
-                    "Standard_DS11_v2"
-                  ]
-                }
-              ]
+              "field": "Microsoft.MachineLearningServices/workspaces/computes/sku.name",
+              "in": ["Standard_DS11_v2"]
             }
           }
         ]
