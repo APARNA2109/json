@@ -18,6 +18,10 @@
             },
             {
               "field": "type",
+              "like": "Microsoft.Search/searchServices/*"
+            },
+            {
+              "field": "type",
               "like": "Microsoft.MachineLearningServices/workspaces/*"
             },
             {
@@ -65,6 +69,35 @@
             "field": "Microsoft.ContainerRegistry/registries/sku.name",
             "notIn": [
               "Basic"
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Search/searchServices"
+          },
+          {
+            "field": "Microsoft.Search/searchServices/sku.name",
+            "notIn": [
+              "Basic"
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.MachineLearningServices/workspaces"
+          },
+          {
+            "field": "Microsoft.MachineLearningServices/workspaces/sku.name",
+            "notIn": [
+              "Basic",
+              "Enterprise"
             ]
           }
         ]
