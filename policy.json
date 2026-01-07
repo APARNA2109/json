@@ -64,7 +64,7 @@
           {
             "not": {
               "field": "Microsoft.Search/searchServices/sku.name",
-              "in": ["Basic"]
+              "in": ["Free", "Basic"]
             }
           }
         ]
