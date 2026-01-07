@@ -19,6 +19,18 @@
         "allOf": [
           {
             "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+          },
+          {
+            "field": "Microsoft.KeyVault/vaults/enablePurgeProtection",
+            "equals": "true"
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
             "equals": "Microsoft.Storage/storageAccounts"
           },
           {
