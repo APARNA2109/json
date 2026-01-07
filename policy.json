@@ -93,19 +93,13 @@
           },
           {
             "not": {
-              "field": "Microsoft.ContainerInstance/containerGroups/count",
+              "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.cpu",
               "in": [1]
             }
           },
           {
             "not": {
-              "field": "Microsoft.ContainerInstance/containerGroups/resources.cpu",
-              "in": [1]
-            }
-          },
-          {
-            "not": {
-              "field": "Microsoft.ContainerInstance/containerGroups/resources.memoryInGb",
+              "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.memoryInGB",
               "in": [1]
             }
           }
