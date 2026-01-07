@@ -104,16 +104,20 @@
             "equals": "Microsoft.ContainerInstance/containerGroups"
           },
           {
-            "not": {
-              "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.cpu",
-              "in": [1]
-            }
-          },
-          {
-            "not": {
-              "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.memoryInGB",
-              "in": [1]
-            }
+            "anyOf": [
+              {
+                "not": {
+                  "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.cpu",
+                  "in": [1]
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.memoryInGB",
+                  "in": [1]
+                }
+              }
+            ]
           }
         ]
       }
