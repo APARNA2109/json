@@ -4,8 +4,6 @@
     "includedPermissions": [
       "aiplatform.locations.get",
       "aiplatform.locations.list",
-      "aiplatform.operations.get",
-      "aiplatform.operations.list",
       "aiplatform.endpoints.create",
       "aiplatform.endpoints.delete",
       "aiplatform.endpoints.get",
@@ -32,7 +30,6 @@
       "notebooks.instances.reset",
       "notebooks.instances.update",
       "notebooks.locations.list",
-      "notebooks.operations.get",
       "notebooks.operations.list",
       "documentai.processors.create",
       "documentai.processors.delete",
@@ -50,7 +47,6 @@
       "run.services.update",
       "run.routes.invoke",
       "run.locations.list",
-      "run.operations.get",
       "run.operations.list",
       "cloudfunctions.functions.create",
       "cloudfunctions.functions.delete",
@@ -67,7 +63,7 @@
       "resourcemanager.projects.get",
       "resourcemanager.projects.list"
     ],
-    "description": "Google Cloud Generative AI Leads"
+    "description": "Google Cloud Generative AI Lead"
   },
-  "roleId": "generativeAILead"
+  "roleId": "projects/clgcporg8-025/roles/generativeAILead"
 }
