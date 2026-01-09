@@ -4,7 +4,6 @@
         "includedPermissions": [
             "aiplatform.endpoints.predict",
             "aiplatform.models.predict",
-            "aiplatform.generativeModels.generateContent",
             "aiplatform.locations.get",
             "aiplatform.locations.list",
             "aiplatform.operations.get",
@@ -62,7 +61,7 @@
             "serviceusage.services.get",
             "serviceusage.services.list"
         ],
-        "description": "Full lead role for Generative AI Lab (Jan 2026): Gemini 2.5 Pro, Pipelines, Speech/Text/Vision/Document AI, Cloud Run/Functions + COMPLETE permissions to CREATE/DEPLOY/MANAGE Vertex AI Workbench instances (notebooks.instances.* + compute support). NO BigQuery, NO Vector Search per senior."
+        "description": "Full lead role for Generative AI Lab (Jan 2026): Gemini 2.5 Pro via predict endpoint, Pipelines, Speech/Text/Vision/Document AI, Cloud Run/Functions + COMPLETE permissions to CREATE/DEPLOY/MANAGE Vertex AI Workbench instances. NO BigQuery, NO Vector Search per senior."
     },
     "roleId": "generativeAILead"
 }
