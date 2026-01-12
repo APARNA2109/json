@@ -51,6 +51,25 @@
       "notebooks.environments.get",
       "notebooks.environments.list",
 
+      // Required for creating & managing Workbench instances (Compute Engine backend)
+      "compute.instances.create",
+      "compute.instances.get",
+      "compute.instances.list",
+      "compute.disks.create",
+      "compute.disks.get",
+      "compute.disks.list",
+      "compute.machineTypes.get",
+      "compute.machineTypes.list",
+      "compute.acceleratorTypes.get",
+      "compute.acceleratorTypes.list",
+      "compute.subnetworks.use",
+      "compute.subnetworks.get",
+      "compute.subnetworks.list",
+      "compute.networks.use",
+      "compute.networks.get",
+      "compute.networks.list",
+      "compute.images.list",
+
       // Cloud Run
       "run.services.create",
       "run.services.get",
@@ -98,7 +117,7 @@
       "serviceusage.services.enable",
       "serviceusage.services.get"
     ],
-    "description": "Google Cloud Generative AI Lead"
+    "description": "Google Cloud Generative AI Lead - with Compute permissions for Workbench notebook creation"
   },
   "roleId": "cloudengineer"
 }
