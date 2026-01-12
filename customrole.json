@@ -2,6 +2,7 @@
   "role": {
     "title": "GoogleCloudGenerativeAILead",
     "includedPermissions": [
+      // Vertex AI Core
       "aiplatform.datasets.create",
       "aiplatform.datasets.delete",
       "aiplatform.datasets.get",
@@ -38,6 +39,19 @@
       "aiplatform.featurestores.get",
       "aiplatform.featurestores.list",
       "aiplatform.featurestores.update",
+      "aiplatform.evaluationRuns.get",
+      "aiplatform.evaluationRuns.list",
+
+      // Vertex AI Workbench / Notebooks
+      "notebooks.instances.get",
+      "notebooks.instances.list",
+      "notebooks.instances.create",
+      "notebooks.instances.delete",
+      "notebooks.instances.update",
+      "notebooks.environments.get",
+      "notebooks.environments.list",
+
+      // Cloud Run
       "run.services.create",
       "run.services.get",
       "run.services.list",
@@ -46,11 +60,19 @@
       "run.jobs.get",
       "run.jobs.list",
       "run.jobs.update",
+
+      // Text-to-Speech
       "texttospeech.voices.list",
       "texttospeech.synthesize",
+
+      // Speech-to-Text
       "speech.recognize",
       "speech.longRunningRecognize",
+
+      // Vision
       "vision.images.annotate",
+
+      // Document AI
       "documentai.processors.create",
       "documentai.processors.delete",
       "documentai.processors.get",
@@ -58,8 +80,23 @@
       "documentai.processors.update",
       "documentai.operations.get",
       "documentai.operations.list",
-      "aiplatform.evaluationRuns.list",
-      "aiplatform.evaluationRuns.get"
+
+      // IAM & Project management (required for deployments)
+      "resourcemanager.projects.get",
+      "resourcemanager.projects.list",
+      "iam.serviceAccounts.actAs",
+      "iam.serviceAccounts.get",
+
+      // Logging & Monitoring
+      "logging.logEntries.create",
+      "logging.logEntries.list",
+      "monitoring.timeSeries.list",
+      "monitoring.alertPolicies.get",
+      "monitoring.alertPolicies.list",
+
+      // Service usage
+      "serviceusage.services.enable",
+      "serviceusage.services.get"
     ],
     "description": "Google Cloud Generative AI Lead"
   },
