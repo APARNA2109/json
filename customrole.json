@@ -57,7 +57,9 @@
       "documentai.processors.list",
       "documentai.processors.update",
       "documentai.operations.get",
-      "documentai.operations.list"
+      "documentai.operations.list",
+      "aiplatform.evaluationRuns.list",
+      "aiplatform.evaluationRuns.get"
     ],
     "description": "Google Cloud Generative AI Lead"
   },
