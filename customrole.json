@@ -1,6 +1,7 @@
 {
   "role": {
-    "title": "GoogleCloudGenerativeAILead",
+    "title": "Google Cloud Generative AI Lead",
+    "description": "Custom role for Generative AI workloads including Vertex AI, Cloud Run, and AI services.",
     "includedPermissions": [
       "aiplatform.datasets.create",
       "aiplatform.datasets.delete",
@@ -25,8 +26,6 @@
       "aiplatform.pipelineJobs.list",
       "aiplatform.pipelineJobs.cancel",
       "aiplatform.pipelineJobs.update",
-      "aiplatform.pipelineJobs.run",
-      "aiplatform.pipelineJobs.runWithOverrides",
       "aiplatform.trainingPipelines.create",
       "aiplatform.trainingPipelines.delete",
       "aiplatform.trainingPipelines.get",
@@ -66,8 +65,9 @@
       "aiplatform.customJobs.get",
       "aiplatform.customJobs.list",
       "aiplatform.customJobs.cancel",
-      "aiplatform.customJobs.update",
       "aiplatform.endpoints.predict",
+      "aiplatform.pipelineJobs.run",
+      "aiplatform.pipelineJobs.runWithOverrides",
       "aiplatform.geminiModels.predict",
       "aiplatform.geminiModels.list",
       "run.services.create",
@@ -90,8 +90,7 @@
       "documentai.processors.update",
       "documentai.operations.get",
       "documentai.operations.list"
-    ],
-    "description": "Custom role for Generative AI workloads including Vertex AI, Cloud Run, and AI services."
+    ]
   },
   "roleId": "googlecloudgenerativeailead"
 }
