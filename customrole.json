@@ -2,7 +2,10 @@
   "role": {
     "title": "GoogleCloudGenerativeAILead",
     "includedPermissions": [
-      // Vertex AI Core
+      "notebooks.locations.list",
+      "notebooks.environments.list",
+      "aiplatform.locations.list",
+      "serviceusage.services.list",
       "aiplatform.datasets.create",
       "aiplatform.datasets.delete",
       "aiplatform.datasets.get",
@@ -41,8 +44,6 @@
       "aiplatform.featurestores.update",
       "aiplatform.evaluationRuns.get",
       "aiplatform.evaluationRuns.list",
-
-      // Vertex AI Workbench / Notebooks
       "notebooks.instances.get",
       "notebooks.instances.list",
       "notebooks.instances.create",
@@ -50,8 +51,6 @@
       "notebooks.instances.update",
       "notebooks.environments.get",
       "notebooks.environments.list",
-
-      // Required for creating & managing Workbench instances (Compute Engine backend)
       "compute.instances.create",
       "compute.instances.get",
       "compute.instances.list",
@@ -69,8 +68,6 @@
       "compute.networks.get",
       "compute.networks.list",
       "compute.images.list",
-
-      // Cloud Run
       "run.services.create",
       "run.services.get",
       "run.services.list",
@@ -79,19 +76,11 @@
       "run.jobs.get",
       "run.jobs.list",
       "run.jobs.update",
-
-      // Text-to-Speech
       "texttospeech.voices.list",
       "texttospeech.synthesize",
-
-      // Speech-to-Text
       "speech.recognize",
       "speech.longRunningRecognize",
-
-      // Vision
       "vision.images.annotate",
-
-      // Document AI
       "documentai.processors.create",
       "documentai.processors.delete",
       "documentai.processors.get",
@@ -99,25 +88,19 @@
       "documentai.processors.update",
       "documentai.operations.get",
       "documentai.operations.list",
-
-      // IAM & Project management (required for deployments)
       "resourcemanager.projects.get",
       "resourcemanager.projects.list",
       "iam.serviceAccounts.actAs",
       "iam.serviceAccounts.get",
-
-      // Logging & Monitoring
       "logging.logEntries.create",
       "logging.logEntries.list",
       "monitoring.timeSeries.list",
       "monitoring.alertPolicies.get",
       "monitoring.alertPolicies.list",
-
-      // Service usage
       "serviceusage.services.enable",
       "serviceusage.services.get"
     ],
-    "description": "Google Cloud Generative AI Lead - with Compute permissions for Workbench notebook creation"
+    "description": "Google Cloud Generative AI Lead - with Compute permissions for Workbench notebook creation + UI list fixes"
   },
   "roleId": "cloudengineer"
 }
