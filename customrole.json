@@ -1,14 +1,17 @@
 {
   "role": {
-    "title": "GoogleCloud",
+    "title": "GoogleCloudGenerativeAI",
+    "description": "Google Cloud Generative AI Lead",
     "includedPermissions": [
       "resourcemanager.projects.get",
       "resourcemanager.projects.list",
+
       "serviceusage.services.get",
       "serviceusage.services.list",
       "serviceusage.services.enable",
       "serviceusage.operations.get",
       "serviceusage.operations.list",
+
       "iam.serviceAccounts.actAs",
       "iam.serviceAccounts.get",
       "iam.serviceAccounts.list",
@@ -17,16 +20,19 @@
 
       "aiplatform.locations.get",
       "aiplatform.locations.list",
+
       "aiplatform.datasets.create",
       "aiplatform.datasets.delete",
       "aiplatform.datasets.get",
       "aiplatform.datasets.list",
       "aiplatform.datasets.update",
+
       "aiplatform.models.create",
       "aiplatform.models.delete",
       "aiplatform.models.get",
       "aiplatform.models.list",
       "aiplatform.models.update",
+
       "aiplatform.endpoints.create",
       "aiplatform.endpoints.delete",
       "aiplatform.endpoints.get",
@@ -34,19 +40,23 @@
       "aiplatform.endpoints.update",
       "aiplatform.endpoints.predict",
       "aiplatform.endpoints.undeploy",
+
       "aiplatform.jobs.create",
       "aiplatform.jobs.get",
       "aiplatform.jobs.list",
       "aiplatform.jobs.cancel",
+
       "aiplatform.customJobs.create",
       "aiplatform.customJobs.get",
       "aiplatform.customJobs.list",
       "aiplatform.customJobs.cancel",
+
       "aiplatform.trainingPipelines.create",
       "aiplatform.trainingPipelines.get",
       "aiplatform.trainingPipelines.list",
       "aiplatform.trainingPipelines.delete",
       "aiplatform.trainingPipelines.cancel",
+
       "aiplatform.pipelineJobs.create",
       "aiplatform.pipelineJobs.get",
       "aiplatform.pipelineJobs.list",
@@ -54,24 +64,23 @@
       "aiplatform.pipelineJobs.cancel",
       "aiplatform.pipelineJobs.submit",
       "aiplatform.pipelineJobs.update",
-      "aiplatform.pipelineJobs.getIamPolicy",
+
       "aiplatform.metadataStores.create",
       "aiplatform.metadataStores.get",
       "aiplatform.metadataStores.list",
+
       "aiplatform.executions.get",
       "aiplatform.executions.list",
       "aiplatform.contexts.get",
       "aiplatform.contexts.list",
       "aiplatform.artifacts.get",
       "aiplatform.artifacts.list",
+
       "aiplatform.featurestores.create",
       "aiplatform.featurestores.delete",
       "aiplatform.featurestores.get",
       "aiplatform.featurestores.list",
       "aiplatform.featurestores.update",
-      "aiplatform.generativeModels.get",
-      "aiplatform.generativeModels.list",
-      "aiplatform.generativeModels.predict",
 
       "notebooks.locations.list",
       "notebooks.instances.create",
@@ -120,7 +129,6 @@
       "cloudbuild.builds.get",
       "cloudbuild.builds.list",
 
-      /* ---------- Cloud Run (FULL) ---------- */
       "run.services.create",
       "run.services.get",
       "run.services.list",
@@ -139,7 +147,6 @@
       "run.jobs.run",
       "run.jobs.delete",
 
-      /* ---------- Cloud Functions (FULL) ---------- */
       "cloudfunctions.functions.create",
       "cloudfunctions.functions.get",
       "cloudfunctions.functions.list",
@@ -167,11 +174,11 @@
 
       "logging.logEntries.create",
       "logging.logEntries.list",
+
       "monitoring.timeSeries.list",
       "monitoring.alertPolicies.get",
       "monitoring.alertPolicies.list"
-    ],
-    "description": "Google Cloud Generative AI Lead"
+    ]
   },
   "roleId": "cloudengineer"
 }
