@@ -1,13 +1,22 @@
 {
   "role": {
-    "title": "GoogleCloudGenerativeAILeader",
+    "title": "VertexAIAdvancedEngineer",
     "includedPermissions": [
-      // Vertex AI Core
+
       "aiplatform.datasets.create",
       "aiplatform.datasets.delete",
       "aiplatform.datasets.get",
       "aiplatform.datasets.list",
       "aiplatform.datasets.update",
+
+      "aiplatform.models.create",
+      "aiplatform.models.delete",
+      "aiplatform.models.get",
+      "aiplatform.models.list",
+      "aiplatform.models.update",
+      "aiplatform.models.predict",
+      "aiplatform.models.explain",
+
       "aiplatform.endpoints.create",
       "aiplatform.endpoints.delete",
       "aiplatform.endpoints.get",
@@ -15,34 +24,45 @@
       "aiplatform.endpoints.predict",
       "aiplatform.endpoints.update",
       "aiplatform.endpoints.undeploy",
-      "aiplatform.models.create",
-      "aiplatform.models.delete",
-      "aiplatform.models.get",
-      "aiplatform.models.list",
-      "aiplatform.models.update",
+
+      "aiplatform.locations.get",
+      "aiplatform.locations.list",
+
+      "aiplatform.prediction.generateContent",
+      "aiplatform.prediction.streamGenerateContent",
+
       "aiplatform.pipelineJobs.create",
       "aiplatform.pipelineJobs.delete",
       "aiplatform.pipelineJobs.get",
       "aiplatform.pipelineJobs.list",
       "aiplatform.pipelineJobs.cancel",
       "aiplatform.pipelineJobs.update",
+
       "aiplatform.trainingPipelines.create",
       "aiplatform.trainingPipelines.delete",
       "aiplatform.trainingPipelines.get",
       "aiplatform.trainingPipelines.list",
       "aiplatform.trainingPipelines.cancel",
       "aiplatform.trainingPipelines.update",
-      "aiplatform.locations.get",
-      "aiplatform.locations.list",
+
       "aiplatform.featurestores.create",
       "aiplatform.featurestores.delete",
       "aiplatform.featurestores.get",
       "aiplatform.featurestores.list",
       "aiplatform.featurestores.update",
-      "aiplatform.evaluationRuns.get",
-      "aiplatform.evaluationRuns.list",
 
-      // Vertex AI Workbench / Notebooks
+      "aiplatform.entityTypes.create",
+      "aiplatform.entityTypes.delete",
+      "aiplatform.entityTypes.get",
+      "aiplatform.entityTypes.list",
+      "aiplatform.entityTypes.update",
+
+      "aiplatform.features.create",
+      "aiplatform.features.delete",
+      "aiplatform.features.get",
+      "aiplatform.features.list",
+      "aiplatform.features.update",
+
       "notebooks.instances.get",
       "notebooks.instances.list",
       "notebooks.instances.create",
@@ -51,84 +71,69 @@
       "notebooks.environments.get",
       "notebooks.environments.list",
 
-      // Compute Engine (for Workbench)
-      "compute.instances.create",
-      "compute.instances.get",
-      "compute.instances.list",
-      "compute.disks.create",
-      "compute.disks.get",
-      "compute.disks.list",
-      "compute.machineTypes.get",
-      "compute.machineTypes.list",
-      "compute.acceleratorTypes.get",
-      "compute.acceleratorTypes.list",
-      "compute.subnetworks.use",
-      "compute.subnetworks.get",
-      "compute.subnetworks.list",
-      "compute.networks.use",
-      "compute.networks.get",
-      "compute.networks.list",
-      "compute.images.list",
+      "storage.buckets.get",
+      "storage.buckets.list",
+      "storage.objects.get",
+      "storage.objects.list",
+      "storage.objects.create",
+      "storage.objects.delete",
 
-      // Cloud Run
-      "run.services.create",
-      "run.services.get",
-      "run.services.list",
-      "run.services.update",
-      "run.services.delete",
-      "run.services.setIamPolicy",
-      "run.routes.get",
-      "run.revisions.get",
-      "run.jobs.create",
-      "run.jobs.get",
-      "run.jobs.list",
-      "run.jobs.update",
-
-      // Cloud Functions
-      "cloudfunctions.functions.create",
-      "cloudfunctions.functions.get",
-      "cloudfunctions.functions.list",
-      "cloudfunctions.functions.update",
-      "cloudfunctions.functions.delete",
-
-      // Text-to-Speech
       "texttospeech.voices.list",
       "texttospeech.synthesize",
 
-      // Speech-to-Text
-      "speech.recognize",
-      "speech.longRunningRecognize",
+      "speech.recognizers.create",
+      "speech.recognizers.get",
+      "speech.recognizers.list",
+      "speech.recognizers.update",
+      "speech.operations.get",
+      "speech.operations.list",
+      "speech.locations.get",
+      "speech.locations.list",
 
-      // Vision
       "vision.images.annotate",
 
-      // Document AI
       "documentai.processors.create",
       "documentai.processors.delete",
       "documentai.processors.get",
       "documentai.processors.list",
       "documentai.processors.update",
+      "documentai.processors.enable",
+      "documentai.processors.disable",
+      "documentai.locations.get",
+      "documentai.locations.list",
       "documentai.operations.get",
       "documentai.operations.list",
 
-      // IAM & Project management
+      "run.services.create",
+      "run.services.get",
+      "run.services.list",
+      "run.services.update",
+      "run.jobs.create",
+      "run.jobs.get",
+      "run.jobs.list",
+      "run.jobs.update",
+
+      "cloudfunctions.functions.create",
+      "cloudfunctions.functions.delete",
+      "cloudfunctions.functions.get",
+      "cloudfunctions.functions.list",
+      "cloudfunctions.functions.update",
+      "cloudfunctions.locations.list",
+
+      "iam.serviceAccounts.get",
+      "iam.serviceAccounts.actAs",
       "resourcemanager.projects.get",
       "resourcemanager.projects.list",
-      "iam.serviceAccounts.actAs",
-      "iam.serviceAccounts.get",
 
-      // Logging & Monitoring
       "logging.logEntries.create",
       "logging.logEntries.list",
       "monitoring.timeSeries.list",
       "monitoring.alertPolicies.get",
       "monitoring.alertPolicies.list",
 
-      // Service usage
-      "serviceusage.services.enable",
-      "serviceusage.services.get"
-    ],
-    "description": "Google Cloud Generative AI Lead - with Compute, Cloud Run, and Cloud Functions permissions"
+      "serviceusage.services.get",
+      "serviceusage.services.enable"
+    ]
   },
   "roleId": "cloudengineer"
 }
