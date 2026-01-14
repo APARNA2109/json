@@ -1,0 +1,41 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "SagemakerGlueRedshift",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:List*",
+        "sagemaker:Describe*",
+        "sagemaker:CreateUserProfile",
+        "sagemaker:DeleteDomain",
+        "sagemaker:CreateDomain",
+        "sagemaker:CreatePresignedDomainUrl",
+        "sagemaker:CreateAutoMLJobV2",
+        "sagemaker:CreateProcessingJob",
+        "sagemaker:CreateTrainingJob",
+        "sagemaker:AddTags",
+        "sagemaker:CreateTransformJob",
+        "sagemaker:CreateEndpoint",
+        "sagemaker:DeleteApp",
+        "sagemaker:DeleteUserProfile",
+        "sagemaker:StopTrainingJob",
+        "sagemaker:CreateAutoMLJob",
+        "sagemaker:CreateEndpointConfig",
+        "sagemaker:CreateCompilationJob",
+        "sagemaker:DescribeEndpointConfig",
+        "sagemaker:StopTransformJob",
+        "sagemaker:StopAutoMLJob",
+        "sagemaker:Delete*",
+        "bedrock:*",
+        "glue:*",
+        "redshift:*",
+        "redshift-serverless:*",
+        "lambda:*",
+        "states:*",
+        "translate:TranslateText"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
