@@ -1,0 +1,159 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+
+    {
+      "Sid": "DenysizeVolume",
+      "Effect": "Deny",
+      "Action": [
+        "ec2:AttachVolume",
+        "ec2:CreateVolume",
+        "ec2:StartInstances",
+        "ec2:RunInstances"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "NumericGreaterThan": {
+          "ec2:VolumeSize": "10"
+        }
+      }
+    },
+
+    {
+      "Sid": "EBSVolumeRestriction",
+      "Effect": "Deny",
+      "Action": "ec2:*",
+      "Resource": "*",
+      "Condition": {
+        "ForAnyValue:StringNotEquals": {
+          "ec2:VolumeType": ["gp3"]
+        }
+      }
+    },
+
+    {
+      "Sid": "EC2InstanceRestriction",
+      "Effect": "Deny",
+      "Action": "ec2:RunInstances",
+      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Condition": {
+        "StringNotEqualsIfExists": {
+          "ec2:InstanceType": "t2.micro"
+        }
+      }
+    },
+
+    {
+      "Sid": "DenyM5ForTrainingProcessing",
+      "Effect": "Deny",
+      "Action": [
+        "sagemaker:CreateTrainingJob",
+        "sagemaker:CreateProcessingJob"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "sagemaker:InstanceTypes": ["ml.m5.4xlarge"]
+        }
+      }
+    },
+
+    {
+      "Sid": "AllowOnlyM5ForDataWrangler",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateDataWranglerJob",
+        "sagemaker:RunDataWranglerFlow"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "sagemaker:InstanceTypes": ["ml.m5.4xlarge"]
+        }
+      }
+    },
+
+    {
+      "Sid": "FeatureStoreUnrestricted",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateFeatureGroup",
+        "sagemaker:PutRecord",
+        "sagemaker:BatchGetRecord",
+        "sagemaker:DescribeFeatureGroup"
+      ],
+      "Resource": "*"
+    },
+
+    {
+      "Sid": "DenyifAdminOrgRole",
+      "Effect": "Deny",
+      "Action": "iam:*",
+      "Resource": [
+        "arn:aws:iam::*:user/dev-admin",
+        "arn:aws:iam::*:group/Admins",
+        "arn:aws:iam::*:role/OrganizationAccountAccessRole"
+      ]
+    },
+
+    {
+      "Sid": "removefromAttendee",
+      "Effect": "Deny",
+      "Action": [
+        "iam:RemoveUserFromGroup",
+        "iam:AddUserToGroup"
+      ],
+      "Resource": "arn:aws:iam::*:group/Attendees"
+    },
+
+    {
+      "Sid": "attachmentofPolicy",
+      "Effect": "Deny",
+      "Action": [
+        "iam:AttachGroupPolicy",
+        "iam:AttachUserPolicy",
+        "iam:PutRolePolicy",
+        "iam:PutGroupPolicy",
+        "iam:PutUserPolicy"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ArnNotLike": {
+          "iam:PolicyARN": [
+            "arn:aws:iam::*:policy/AWS*PolicyDefinition"
+          ]
+        }
+      }
+    },
+
+    {
+      "Sid": "RegionRestriction",
+      "Effect": "Deny",
+      "Action": "*",
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:RequestedRegion": [
+            "us-east-1",
+            "us-east-2",
+            "us-west-2"
+          ]
+        }
+      }
+    },
+
+    {
+      "Sid": "BillingAndOrgRestriction",
+      "Effect": "Deny",
+      "Action": [
+        "config:*",
+        "bcm-dashboards:*",
+        "account:*",
+        "cur:*",
+        "ce:*",
+        "organizations:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
