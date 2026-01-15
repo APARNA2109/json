@@ -13,7 +13,9 @@
             "states.amazonaws.com",
             "emr-serverless.amazonaws.com",
             "sagemaker.amazonaws.com",
-            "glue.amazonaws.com"
+            "glue.amazonaws.com",
+            "redshift.amazonaws.com"
+
           ],
           "aws:ResourceAccount": "${aws:PrincipalAccount}"
         }
