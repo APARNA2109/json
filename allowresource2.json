@@ -36,6 +36,50 @@
         "translate:TranslateText"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "DataWranglerFlowAndApp",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateDataWranglerFlow",
+        "sagemaker:DescribeDataWranglerFlow",
+        "sagemaker:UpdateDataWranglerFlow",
+        "sagemaker:DeleteDataWranglerFlow",
+        "sagemaker:ListDataWranglerFlows",
+        "sagemaker:CreateApp",
+        "sagemaker:DescribeApp",
+        "sagemaker:ListApps",
+        "sagemaker:DeleteApp"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "SageMakerFeatureStoreFullAccess",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateFeatureGroup",
+        "sagemaker:DescribeFeatureGroup",
+        "sagemaker:ListFeatureGroups",
+        "sagemaker:UpdateFeatureGroup",
+        "sagemaker:DeleteFeatureGroup",
+        "sagemaker:PutRecord",
+        "sagemaker:BatchPutRecord",
+        "sagemaker:GetRecord",
+        "sagemaker:BatchGetRecord",
+        "sagemaker:DeleteRecord",
+        "sagemaker:CreateFeatureStoreIngestionJob"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "KMSForS3AndSageMaker",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
     }
   ]
 }
