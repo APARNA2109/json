@@ -26,8 +26,7 @@
       "Resource": [
         "arn:aws:iam::*:role/aws-service-role/lambda.amazonaws.com/AWSServiceRoleForLambda",
         "arn:aws:iam::*:role/aws-service-role/states.amazonaws.com/AWSServiceRoleForStates",
-        "arn:aws:iam::*:role/aws-service-role/sagemaker.amazonaws.com/AWSServiceRoleForAmazonSageMakerNotebooks",
-        "arn:aws:iam::*:role/aws-service-role/redshift.amazonaws.com/AWSServiceRoleForRedshift"
+        "arn:aws:iam::*:role/aws-service-role/sagemaker.amazonaws.com/AWSServiceRoleForAmazonSageMakerNotebooks"
       ],
       "Condition": {
         "StringEquals": {
