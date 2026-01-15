@@ -80,6 +80,15 @@
         "kms:DescribeKey"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "AllowSQLWorkbenchForRedshift",
+      "Effect": "Allow",
+      "Action": [
+        "sqlworkbench:GetUserInfo",
+        "sqlworkbench:GetAccountInfo"
+      ],
+      "Resource": "*"
     }
   ]
 }
