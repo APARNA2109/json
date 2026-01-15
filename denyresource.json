@@ -44,7 +44,7 @@
     },
 
     {
-      "Sid": "DenyM5ForTrainingProcessing",
+      "Sid": "DenyOtherSageMakerInstances",
       "Effect": "Deny",
       "Action": [
         "sagemaker:CreateTrainingJob",
@@ -52,14 +52,17 @@
       ],
       "Resource": "*",
       "Condition": {
-        "ForAnyValue:StringEquals": {
-          "sagemaker:InstanceTypes": ["ml.m5.4xlarge"]
+        "ForAnyValue:StringNotEquals": {
+          "sagemaker:InstanceTypes": [
+            "ml.t3.large",
+            "ml.t3.medium"
+          ]
         }
       }
     },
 
     {
-      "Sid": "AllowOnlyM5ForDataWrangler",
+      "Sid": "AllowDataWranglerM5",
       "Effect": "Allow",
       "Action": [
         "sagemaker:CreateDataWranglerJob",
@@ -86,7 +89,7 @@
     },
 
     {
-      "Sid": "DenyifAdminOrgRole",
+      "Sid": "DenyIfAdminOrgRole",
       "Effect": "Deny",
       "Action": "iam:*",
       "Resource": [
@@ -97,7 +100,7 @@
     },
 
     {
-      "Sid": "removefromAttendee",
+      "Sid": "AttendeeGroupRestriction",
       "Effect": "Deny",
       "Action": [
         "iam:RemoveUserFromGroup",
@@ -107,7 +110,7 @@
     },
 
     {
-      "Sid": "attachmentofPolicy",
+      "Sid": "RestrictPolicyAttachment",
       "Effect": "Deny",
       "Action": [
         "iam:AttachGroupPolicy",
@@ -155,5 +158,6 @@
       ],
       "Resource": "*"
     }
+
   ]
 }
