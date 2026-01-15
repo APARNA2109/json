@@ -15,9 +15,7 @@
             "sagemaker.amazonaws.com",
             "glue.amazonaws.com",
             "redshift.amazonaws.com"
-
-          ],
-          "aws:ResourceAccount": "${aws:PrincipalAccount}"
+          ]
         }
       }
     },
