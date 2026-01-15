@@ -86,7 +86,26 @@
       "Effect": "Allow",
       "Action": [
         "sqlworkbench:GetUserInfo",
-        "sqlworkbench:GetAccountInfo"
+        "sqlworkbench:GetAccountInfo",
+        "sqlworkbench:GetAccountSettings",
+        "sqlworkbench:GetUserWorkspaceSettings"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3BucketcreationAndLifecycle",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:GetBucketCors",
+        "s3:GetBucketCORS",
+        "s3:CreateBucket",
+        "s3:DeleteObject",
+        "s3:GetBucketLocation",
+        "s3:PutBucketCORS",
+        "s3:GetLifecycleConfiguration",
+        "s3:PutLifecycleConfiguration"
       ],
       "Resource": "*"
     }
