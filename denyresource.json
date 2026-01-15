@@ -77,18 +77,6 @@
     },
 
     {
-      "Sid": "FeatureStoreUnrestricted",
-      "Effect": "Allow",
-      "Action": [
-        "sagemaker:CreateFeatureGroup",
-        "sagemaker:PutRecord",
-        "sagemaker:BatchGetRecord",
-        "sagemaker:DescribeFeatureGroup"
-      ],
-      "Resource": "*"
-    },
-
-    {
       "Sid": "DenyIfAdminOrgRole",
       "Effect": "Deny",
       "Action": "iam:*",
@@ -157,6 +145,21 @@
         "organizations:*"
       ],
       "Resource": "*"
+    },
+
+    {
+      "Sid": "RestrictRedshiftBaseCapacity",
+      "Effect": "Deny",
+      "Action": [
+        "redshift:CreateCluster",
+        "redshift:ModifyCluster"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "NumericNotEquals": {
+          "redshift:BaseCapacity": 4
+        }
+      }
     }
 
   ]
