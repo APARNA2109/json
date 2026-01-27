@@ -5,11 +5,7 @@
   "Description": "Spektra Training Custom Role.",
   "Actions": [
     "Microsoft.CognitiveServices/register/action",
-    "Microsoft.CognitiveServices/accounts/read",
-    "Microsoft.CognitiveServices/accounts/write",
-    "Microsoft.CognitiveServices/accounts/delete",
-    "Microsoft.CognitiveServices/accounts/projects/*",
-    "Microsoft.CognitiveServices/accounts/listKeys/action",
+    "Microsoft.CognitiveServices/accounts/*",
     "Microsoft.CognitiveServices/locations/*/read",
     "Microsoft.ContainerInstance/containerGroups/*",
     "Microsoft.ContainerRegistry/registries/read",
