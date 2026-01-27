@@ -1,6 +1,6 @@
 {
   "role": {
-    "title": "GCPCloudDigitalLead",
+    "title": "GCPCloudDigitalLeader",
     "includedPermissions": [
         "documentai.dataLabelingJobs.cancel",
         "documentai.dataLabelingJobs.create",
