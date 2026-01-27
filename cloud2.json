@@ -1,6 +1,6 @@
 {
   "role": {
-    "title": "GCPCloudDigitalLead1",
+    "title": "GCPCloudDigitalLeader1",
     "includedPermissions": [
         "compute.targetHttpProxies.use",
         "compute.targetHttpsProxies.create",
