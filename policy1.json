@@ -78,7 +78,7 @@
           {
             "not": {
               "field": "Microsoft.Web/serverfarms/sku.name",
-              "in": ["B1"]
+              "in": ["B1", "FC1"]
             }
           }
         ]
