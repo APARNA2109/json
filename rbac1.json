@@ -22,6 +22,7 @@
     "Microsoft.Resources/subscriptions/resourceGroups/read",
     "Microsoft.Web/sites/*",
     "Microsoft.Web/sites/functions/*",
+    "Microsoft.Web/serverFarms/*",
     "Microsoft.BotService/botServices/*"
   ],
   "NotActions": [
