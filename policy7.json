@@ -1,0 +1,357 @@
+{
+  "if": {
+    "anyOf": [
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "anyOf": [
+              {
+                "not": {
+                  "field": "Microsoft.ContainerService/managedClusters/sku.tier",
+                  "equals": "Free"
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerService/managedClusters/agentPoolProfiles[*].count",
+                  "in": [
+                    "1"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerService/managedClusters/agentPoolProfiles[*].vmSize",
+                  "in": [
+                    "Standard_B2s",
+                    "Standard_B2ms",
+                    "Standard_DS2_v2",
+                    "Standard_D2s_v3"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerService/managedClusters/agentPoolProfiles[*].name",
+                  "equals": "agentpool"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.ContainerInstance/containerGroups"
+          },
+          {
+            "anyOf": [
+              {
+                "not": {
+                  "field": "Microsoft.ContainerInstance/containerGroups/sku",
+                  "equals": "Standard"
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.memoryInGB",
+                  "in": [
+                    "1",
+                    "1.5"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "field": "Microsoft.ContainerInstance/containerGroups/containers[*].resources.requests.cpu",
+                  "in": [
+                    "1"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Web/serverfarms"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "Microsoft.Web/serverfarms/sku.tier",
+                "in": [
+                  "Premium",
+                  "PremiumV3",
+                  "PremiumMV3",
+                  "PremiumV2",
+                  "Premium0V3",
+                  "ElasticPremium",
+                  "IsolatedV2"
+                ]
+              },
+              {
+                "field": "Microsoft.Web/serverfarms/sku.name",
+                "in": [
+                  "I1V2",
+                  "I2V2",
+                  "I3V2",
+                  "EP1",
+                  "EP2",
+                  "EP3",
+                  "P0V3",
+                  "P1",
+                  "P2",
+                  "P3",
+                  "P1V3",
+                  "P2V3",
+                  "P3V3",
+                  "P1MV3",
+                  "P2MV3",
+                  "P3MV3",
+                  "P4MV3",
+                  "P5MV3",
+                  "P1v2",
+                  "P2v2",
+                  "P3v2"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Web/sites"
+          },
+          {
+            "not": {
+              "field": "Microsoft.Web/serverfarms/sku.tier",
+              "equals": "Dynamic"
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.ServiceBus/namespaces"
+          },
+          {
+            "not": {
+              "allOf": [
+                {
+                  "field": "Microsoft.ServiceBus/namespaces/sku.tier",
+                  "in": [
+                    "Basic"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "Microsoft.Compute/virtualMachines/imageOffer",
+                  "in": [
+                    "0001-com-ubuntu-server-focal",
+                    "WindowsServer",
+                    "centos-7-9",
+                    "0001-com-ubuntu-minimal-bionic",
+                    "UbuntuServer",
+                    "Windows-10",
+                    "ubuntu-24_04-lts",
+                    "0001-com-ubuntu-server-jammy"
+                  ]
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachines/imageSku",
+                  "in": [
+                    "20_04-lts-gen2",
+                    "2019-datacenter-gensecond",
+                    "2016-datacenter-gensecond",
+                    "centos-7-9",
+                    "minimal-18_04-lts-gen2",
+                    "2019-Datacenter",
+                    "18.04-LTS",
+                    "win10-21h2-pro-g2",
+                    "server",
+                    "22_04-lts-gen2"
+                  ]
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                  "in": [
+                    "Windows"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "not": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Compute/virtualMachines/sku.name",
+                  "in": [
+                    "Standard_B2s",
+                    "Standard_B1s",
+                    "Standard_B2ms",
+                    "Standard_DS1_v2",
+                    "Standard_DS2_v2",
+                    "Standard_D2s_v3"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachineScaleSets"
+          },
+          {
+            "not": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Compute/virtualMachineScaleSets/sku.name",
+                  "in": [
+                    "Standard_B2s",
+                    "Standard_B1s",
+                    "Standard_B2ms",
+                    "Standard_DS1_v2",
+                    "Standard_DS2_v2",
+                    "Standard_D2s_v3"
+                  ]
+                },
+                {
+                  "field": "Microsoft.Compute/virtualMachineScaleSets/sku.capacity",
+                  "in": [
+                    "1"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/disks"
+          },
+          {
+            "not": {
+              "field": "Microsoft.Compute/disks/sku.name",
+              "in": [
+                "Standard_LRS"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+          },
+          {
+            "not": {
+              "field": "Microsoft.KeyVault/vaults/sku.name",
+              "in": [
+                "Standard"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+          },
+          {
+            "allOf": [
+              {
+                "field": "Microsoft.KeyVault/vaults/enablePurgeProtection",
+                "equals": "true"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.ContainerRegistry/registries"
+          },
+          {
+            "not": {
+              "field": "Microsoft.ContainerRegistry/registries/sku.name",
+              "in": [
+                "Basic"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "allOf": [
+              {
+                "field": "Microsoft.Storage/storageAccounts/immutableStorageWithVersioning.enabled",
+                "in": [
+                  "true"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "then": {
+    "effect": "deny"
+  }
+}
