@@ -1,0 +1,300 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "accounts_AIAgentOpenAI_name": {
+      "type": "string",
+      "defaultValue": "AgenticOpenAI"
+    },
+    "DeploymentID": {
+      "type": "String"
+    },
+    "adminUsername": {
+      "type": "String"
+    },
+    "adminPassword": {
+      "type": "SecureString"
+    }
+  },
+  "variables": {
+    "OpenAIAccountName": "[concat(parameters('accounts_AIAgentOpenAI_name'), '-', parameters('DeploymentID'))]",
+    "ModelName": "gpt-4.1",
+    "DeploymentType": "Standard",
+    "Capacity": 10,
+    "location": "[resourceGroup().location]",
+    "vmSize": "Standard_B4ms",
+    "storageAccountType": "Standard_LRS",
+    "publicIpAddressSku": "Standard",
+    "networkSecurityGroupName": "[concat('nsg',parameters('DeploymentID'))]",
+    "virtualNetworkName": "[concat('vnet',parameters('DeploymentID'))]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/','subnet')]",
+    "labvm": "[concat('labvm-',parameters('DeploymentID'))]",
+    "publicIpAddressName": "[concat('labvmip', uniqueString(resourceGroup().id))]",
+    "networkInterfaceName": "[concat('nic-', parameters('DeploymentID'))]",
+    "disksizeinGB": 64,
+    "imageReferenceID": "/subscriptions/453f90a2-7f36-4cf1-86a8-c0c57a6ef68a/resourceGroups/cloudlabs-mgmt-rg/providers/Microsoft.Compute/galleries/Agentic_AI/images/Agentic_AI_Ubuntu/versions/0.0.1"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2025-06-01",
+      "name": "[variables('OpenAIAccountName')]",
+      "location": "eastus",
+      "kind": "OpenAI",
+      "sku": { "name": "S0" },
+      "properties": {
+        "customSubDomainName": "[toLower(concat('aiagent-', parameters('DeploymentID')))]",
+        "publicNetworkAccess": "Enabled",
+        "allowProjectManagement": false,
+        "networkAcls": {
+          "defaultAction": "Allow",
+          "virtualNetworkRules": [],
+          "ipRules": []
+        },
+        "apiProperties": {}
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/deployments",
+      "apiVersion": "2025-06-01",
+      "name": "[concat(variables('OpenAIAccountName'), '/gpt-4.1')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('OpenAIAccountName'))]"
+      ],
+      "sku": {
+        "name": "[variables('DeploymentType')]",
+        "capacity": "[variables('Capacity')]"
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "[variables('ModelName')]",
+          "version": "2025-04-14"
+        },
+        "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+        "raiPolicyName": "Microsoft.DefaultV2"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/deployments",
+      "apiVersion": "2025-06-01",
+      "name": "[concat(variables('OpenAIAccountName'), '/text-embedding-3-large')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts/deployments', variables('OpenAIAccountName'), 'gpt-4.1')]"
+      ],
+      "sku": {
+        "name": "Standard",
+        "capacity": 120
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "text-embedding-3-large",
+          "version": "1"
+        },
+        "versionUpgradeOption": "NoAutoUpgrade",
+        "currentCapacity": 120,
+        "raiPolicyName": "Microsoft.DefaultV2"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/deployments",
+      "apiVersion": "2025-06-01",
+      "name": "[concat(variables('OpenAIAccountName'), '/gpt-image-1')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts/deployments', variables('OpenAIAccountName'), 'text-embedding-3-large')]"
+      ],
+      "sku": {
+        "name": "Standard",
+        "capacity": 1
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "gpt-image-1",
+          "version": "2025-04-15"
+        },
+        "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+        "raiPolicyName": "Microsoft.DefaultV2"
+      }
+    },
+    {
+      "name": "[variables('labvm')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2022-03-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "fromImage",
+            "managedDisk": {
+              "storageAccountType": "[variables('storageAccountType')]"
+            },
+            "diskSizeGB": "[variables('disksizeinGB')]"
+          },
+          "imageReference": {
+            "id": "[variables('imageReferenceID')]"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
+          ]
+        },
+        "securityProfile": {
+          "securityType": "TrustedLaunch"
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2022-11-01",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": ["10.0.0.0/16"]
+        },
+        "subnets": [
+          {
+            "name": "subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2022-11-01",
+      "name": "[variables('networkInterfaceName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "subnet": { "id": "[variables('subnetRef')]" },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2022-11-01",
+      "name": "[variables('publicIpAddressName')]",
+      "location": "[variables('location')]",
+      "tags": { "displayName": "Public IP" },
+      "properties": {
+        "publicIPAllocationMethod": "Static",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('publicIpAddressName')]"
+        }
+      },
+      "sku": { "name": "[variables('publicIpAddressSku')]" }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2022-11-01",
+      "name": "[variables('networkSecurityGroupName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "priority": 1000,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
+            }
+          },
+          {
+            "name": "RDP",
+            "properties": {
+              "priority": 320,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3389"
+            }
+          },
+          {
+            "name": "ICMP",
+            "properties": {
+              "priority": 310,
+              "protocol": "ICMP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "*"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "Azure-OpenAI-Endpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('OpenAIAccountName'))).endpoint]"
+    },
+    "OpenAI-Key1": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('OpenAIAccountName')), '2025-06-01').key1]"
+    },
+    "OpenAI-Key2": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('OpenAIAccountName')), '2025-06-01').key2]"
+    },
+    "ModelDeploymentName-01": {
+      "type": "string",
+      "value": "gpt-4.1"
+    },
+    "ModelDeploymentName-02": {
+      "type": "string",
+      "value": "text-embedding-3-large"
+    },
+    "ModelDeploymentName-03": {
+      "type": "string",
+      "value": "gpt-image-1"
+    }
+  }
+}
