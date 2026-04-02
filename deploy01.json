@@ -1,0 +1,880 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "AzureUserName": {
+      "type": "string"
+    },
+    "AzurePassword": {
+      "type": "securestring"
+    },
+    "DeploymentID": {
+      "type": "string"
+    },
+    "ODLID": {
+      "type": "string"
+    },
+    "trainerUserPassword": {
+      "type": "string"
+    },
+    "diskStorageType": {
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Premium_LRS"
+      ],
+      "type": "string"
+    },
+    "vmAdminUsername": {
+      "type": "string"
+    },
+    "vmAdminPassword": {
+      "type": "SecureString"
+    },
+    "azuserobjectid": {
+      "type": "string"
+    },
+    "trainerUserName": {
+      "type": "string"
+    },
+    "resourceGroup": {
+      "type": "string"
+    },
+    "azureFirewallName": {
+      "type": "string"
+    },
+    "azureFirewallTier": {
+      "type": "string"
+    },
+    "vnetName": {
+      "type": "string"
+    },
+    "vnetAddressSpace": {
+      "type": "string"
+    },
+    "firewallsubnetName": {
+      "type": "string"
+    },
+    "firewallsubnetAddressSpace": {
+      "type": "string"
+    },
+    "firewallpublicIpAddressName": {
+      "type": "string"
+    },
+    "applicationGatewayName": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "string"
+    },
+    "skuSize": {
+      "type": "string"
+    },
+    "capacity": {
+      "type": "int",
+      "defaultValue": 2
+    },
+    "agpublicIpAddressName": {
+      "type": "string"
+    },
+    "agsubnetName": {
+      "type": "string"
+    },
+    "sku": {
+      "type": "string"
+    },
+    "allocationMethod": {
+      "type": "string"
+    },
+    "resourceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the resource."
+      }
+    },
+    "emailId": {
+      "type": "string",
+      "defaultValue": " ",
+      "metadata": "This will get the User Email ID who will be launching the lab from the parameter file using GET-USER-EMAIL-ID"
+    },
+    "AppID": {
+        "type": "string"
+    },
+      "AppSecret": {
+        "type": "string"
+    }
+  },
+  "variables": {
+    "networkApiVersion": "?api-version=2019-09-01",
+    "AzureSubscriptionID": "[subscription().subscriptionId]",
+    "vnetId": "[concat('/subscriptions/',variables('AzureSubscriptionID'), '/', 'resourceGroups/FirewallVM-rg/providers/Microsoft.Network/virtualNetworks/vnet')]",
+    "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('agpublicIpAddressName'))]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('agsubnetName'))]",
+    "subnetRef1": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'FirewallVMsubnet')]",
+    "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]",
+    "jumphost": "FirewallVM",
+    "AzureTenantID": "[subscription().tenantId]",
+    "networkInterfaceName1": "[concat(variables('jumphost'), '-nic')]",
+    "virtualMachineSize": "Standard_D2s_v3",
+    "location": "[resourceGroup().location]",
+    "cloudlabsCommon": "[concat(' -AzureUserName ', parameters('AzureUserName'), ' -AzurePassword ', parameters('AzurePassword'), ' -vmAdminPassword ', parameters('vmAdminPassword'), ' -AzureTenantID ', variables('AzureTenantID'), ' -AzureSubscriptionID ', variables('AzureSubscriptionID'), ' -ODLID ', parameters('ODLID'), ' -DeploymentID ', parameters('DeploymentID'), ' -azuserobjectid ', parameters('azuserobjectid'), ' -JumpVMName ', variables('jumphost'), ' -AppID ', parameters('AppID'), ' -AppSecret ', parameters('AppSecret'))]",
+    "Enable-CloudLabsEmbeddedShadow": "[concat(' -vmAdminUsername ', parameters('vmAdminUsername'), ' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'))]",
+    "vmPublicIpDnsName": "[concat('firewallvm',uniqueString(resourceGroup().id))]",
+    "publicIpAddressName1": "[concat(variables('jumphost'), '-pip')]",
+    "networkSecurityGroupName1": "[concat(variables('jumphost'), '-nsg')]",
+    "keyVaultName": "[concat('fw-quick-',parameters('DeploymentID'))]",
+    "storageAccountName": "[concat('nsglogs',parameters('DeploymentID'))]",
+    "dhcpOption": {
+      "dnsServers": [
+        "48.216.235.241"
+      ]
+    },
+    "dhcpOptions": "[if(contains(parameters('emailId'), 'tcs.com'), variables('dhcpOption'), json('null'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2021-12-01-preview",
+      "name": "log-analytics",
+      "location": "[variables('location')]",
+      "properties": {
+        "sku": {
+          "name": "pergb2018"
+        },
+        "retentionInDays": "30",
+        "features": {
+          "enableLogAccessUsingOnlyResourcePermissions": "true"
+        }
+      }
+    },
+    {
+
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2018-11-30",
+      "name": "DemoIdentity",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2019-09-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DemoIdentity')]"
+      ],
+      "properties": {
+        "enabledForDeployment": false,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": false,
+        "tenantId": "[subscription().tenantId]",
+        "accessPolicies": [
+          {
+            "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DemoIdentity'), '2018-11-30').principalId]",
+            "tenantId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DemoIdentity'), '2018-11-30').tenantId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
+          }
+        ],
+        "sku": {
+          "name": "Standard",
+          "family": "A"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/routeTables",
+      "apiVersion": "2020-05-01",
+      "name": "firewallroute",
+      "location": "[variables('location')]",
+      "properties": {
+        "routes": [
+
+        ],
+        "disableBgpRoutePropagation": false
+      }
+    },
+    {
+
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2020-07-01",
+      "name": "BastionPublicIP",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('vnetName')]",
+      "location": "[variables('location')]",
+      "apiVersion": "2019-09-01",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressSpace')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "AzureFirewallSubnet",
+            "properties": {
+              "addressPrefix": "[parameters('firewallsubnetAddressSpace')]"
+            }
+          },
+          {
+            "name": "[parameters('agsubnetName')]",
+            "properties": {
+              "addressPrefix": "10.0.1.0/24"
+            }
+          },
+          {
+            "name": "FirewallVMsubnet",
+            "properties": {
+              "addressPrefix": "10.0.2.0/24"
+            }
+          },
+          {
+            "name": "AzureBastionSubnet",
+            "properties": {
+              "addressPrefix": "10.0.20.0/24"
+            }
+          }
+        ],
+        "dhcpOptions": "[variables('dhcpOptions')]"
+      },
+      "tags": {}
+    },
+    {
+      "type": "Microsoft.Network/bastionHosts",
+      "apiVersion": "2020-07-01",
+      "name": "Bastion",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
+        "[resourceId('Microsoft.Network/publicIpAddresses', 'BastionPublicIP')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "BastionIpConfiguration",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet', 'AzureBastionSubnet')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', 'BastionPublicIP')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2019-02-01",
+      "name": "[variables('publicIpAddressName1')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIpAllocationMethod": "Static",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('vmPublicIpDnsName')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2017-06-01",
+      "name": "[variables('networkSecurityGroupName1')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "default-allow-rdp",
+            "properties": {
+              "priority": 110,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3389"
+            }
+          },
+          {
+            "name": "Port_80",
+            "properties": {
+              "description": "Allow WEB",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "Port_443",
+            "properties": {
+              "description": "Allow WEB1",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "name": "[variables('networkInterfaceName1')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName1'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName1'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef1')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId(resourceGroup().name,'Microsoft.Network/publicIpAddresses', variables('publicIpAddressName1'))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName1'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2017-03-30",
+      "name": "[variables('jumphost')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName1'))]"
+      ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[variables('jumphost')]",
+          "adminUsername": "[parameters('vmAdminUsername')]",
+          "adminPassword": "[parameters('vmAdminPassword')]",
+          "windowsConfiguration": {
+            "provisionVmAgent": "true"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "[variables('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2019-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(variables('jumphost'),'OSDisk')]",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "[parameters('diskStorageType')]"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName1'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "apiVersion": "2015-06-15",
+          "name": "[concat(variables('jumphost'),'/', 'winExtension')]",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('jumphost'))]"
+          ],
+          "tags": {
+            "displayName": "VM Extension"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.8",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1",
+                "https://experienceazure.blob.core.windows.net/templates/infra-security-lab/scripts/psscript-01.ps1"
+              ]
+            },
+            "protectedSettings": {
+              "commandToExecute": "[concat('powershell.exe -ExecutionPolicy ByPass -File infra-security-lab/scripts/psscript-01.ps1', variables('cloudlabsCommon'),variables('Enable-CloudLabsEmbeddedShadow'))]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2020-08-01",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "name": "[parameters('firewallpublicIpAddressName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      },
+      "tags": {}
+    },
+    {
+      "type": "Microsoft.Network/firewallPolicies",
+      "apiVersion": "2020-07-01",
+      "name": "firewallpolicy",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DemoIdentity')]"
+      ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DemoIdentity')]": {}
+        }
+      },
+      "properties": {
+        "sku": {
+          "tier": "Premium"
+        },
+        "intrusionDetection": {
+          "mode": "Alert",
+          "configuration": {
+            "signatureOverrides": [
+              {
+                "id": "2024897",
+                "mode": "Deny"
+              },
+              {
+                "id": "2024898",
+                "mode": "Alert"
+              }
+            ],
+            "bypassTrafficSettings": [
+              {
+                "name": "SecretBypass",
+                "protocol": "TCP",
+                "sourceAddresses": [
+                  "*"
+                ],
+                "destinationAddresses": [
+                  "1.1.1.1"
+                ],
+                "destinationPorts": [
+                  "80"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "type": "Microsoft.Network/azureFirewalls",
+      "name": "[parameters('azureFirewallName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIpAddresses', parameters('firewallpublicIpAddressName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "[resourceId('Microsoft.Network/firewallPolicies', 'firewallpolicy')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[parameters('firewallpublicIpAddressName')]",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'AzureFirewallSubnet')]"
+              },
+              "publicIpAddress": {
+                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIPAddresses', parameters('firewallpublicIpAddressName'))]"
+              }
+            }
+          }
+        ],
+        "sku": {
+          "tier": "[parameters('azureFirewallTier')]"
+        },
+        "firewallPolicy": {
+          "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/firewallPolicies', 'firewallpolicy')]"
+        }
+      },
+      "tags": {}
+    },
+    {
+      "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+      "apiVersion": "2020-07-01",
+      "name": "firewallpolicy/PolicyRules",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/firewallPolicies', 'firewallpolicy')]"
+      ],
+      "properties": {
+        "priority": 200,
+        "ruleCollections": [
+          {
+            "name": "AllowWeb",
+            "priority": 101,
+            "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+            "action": {
+              "type": "Allow"
+            },
+            "rules": [
+              {
+                "ruleType": "ApplicationRule",
+                "name": "AllowAzure",
+                "protocols": [
+                  {
+                    "protocolType": "Https",
+                    "port": 443
+                  }
+                ],
+                "targetFqdns": [
+                  "*azure.com",
+                  "*microsoft.com"
+                ],
+                "sourceAddresses": [
+                  "*"
+                ],
+                "terminateTLS": true
+              },
+              {
+                "ruleType": "ApplicationRule",
+                "name": "AllowNews",
+                "protocols": [
+                  {
+                    "protocolType": "Https",
+                    "port": 443
+                  }
+                ],
+                "webCategories": [
+                  "business",
+                  "webbasedemail"
+                ],
+                "sourceAddresses": [
+                  "*"
+                ],
+                "terminateTLS": true
+              }
+            ]
+          },
+          {
+            "name": "BlockPage",
+            "priority": 100,
+            "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+            "action": {
+              "type": "Deny"
+            },
+            "rules": [
+              {
+                "ruleType": "ApplicationRule",
+                "name": "BlockAzureEvents",
+                "protocols": [
+                  {
+                    "protocolType": "Https",
+                    "port": 443
+                  }
+                ],
+                "targetUrls": [
+                  "azure.microsoft.com/en-us/community/events",
+                  "azure.microsoft.com/en-us/community/events/*"
+                ],
+                "sourceAddresses": [
+                  "*"
+                ],
+                "terminateTLS": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('applicationGatewayName')]",
+      "type": "Microsoft.Network/applicationGateways",
+      "apiVersion": "2021-08-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('agpublicIpAddressName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "sku": {
+          "name": "[parameters('skuSize')]",
+          "tier": "[parameters('tier')]",
+          "capacity": "[parameters('capacity')]"
+        },
+        "gatewayIPConfigurations": [
+          {
+            "name": "appGatewayIpConfig",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              }
+            }
+          }
+        ],
+        "frontendIPConfigurations": [
+          {
+            "name": "appGwPublicFrontendIp",
+            "properties": {
+              "PublicIPAddress": {
+                "id": "[variables('publicIPRef')]"
+              }
+            }
+          }
+        ],
+        "frontendPorts": [
+          {
+            "name": "port_80",
+            "properties": {
+              "Port": 80
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "AGBackend",
+            "properties": {
+              "backendAddresses": []
+            }
+          },
+          {
+            "name": "AGBackendtarget",
+            "properties": {
+              "backendAddresses": []
+            }
+          }
+        ],
+        "backendHttpSettingsCollection": [
+          {
+            "name": "Backendsettings",
+            "properties": {
+              "Port": 80,
+              "Protocol": "Http",
+              "cookieBasedAffinity": "Disabled",
+              "requestTimeout": 20
+            }
+          }
+        ],
+        "backendSettingsCollection": [],
+        "httpListeners": [
+          {
+            "name": "AGListener",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGwPublicFrontendIp')]"
+              },
+              "frontendPort": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/port_80')]"
+              },
+              "protocol": "Http",
+              "sslCertificate": null
+            }
+          }
+        ],
+        "listeners": [],
+        "requestRoutingRules": [
+          {
+            "Name": "AGRoutingrule",
+            "properties": {
+              "RuleType": "Basic",
+              "httpListener": {
+                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/AGListener')]"
+              },
+              "priority": 100,
+              "backendAddressPool": {
+                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/AGBackendtarget')]"
+              },
+              "backendHttpSettings": {
+                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/Backendsettings')]"
+              }
+            }
+          }
+        ],
+        "routingRules": [],
+        "enableHttp2": false,
+        "sslCertificates": [],
+        "probes": []
+      }
+    },
+    {
+      "apiVersion": "2020-08-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('agpublicIpAddressName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('allocationMethod')]"
+      }
+    },
+    {
+      "apiVersion": "2021-12-01",
+      "type": "Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies",
+      "name": "[parameters('resourceName')]",
+      "location": "[variables('location')]",
+      "tags": {},
+      "properties": {
+        "customRules": [],
+        "policySettings": {
+          "fileUploadLimitInMb": 100,
+          "maxRequestBodySizeInKb": 128,
+          "mode": "Detection",
+          "requestBodyCheck": true,
+          "state": "Enabled"
+        },
+        "managedRules": {
+          "exclusions": [],
+          "managedRuleSets": [
+            {
+              "ruleSetType": "OWASP",
+              "ruleSetVersion": "3.2",
+              "ruleGroupOverrides": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2022-05-01",
+      "name": "[variables('storageAccountName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot"
+      }
+
+    },
+    {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2022-03-01",
+        "name": "[format('ASP-FirewallVMrg-{0}', parameters('DeploymentID'))]",
+        "location": "[variables('location')]",
+        "kind": "linux",
+        "properties": {
+          "reserved": true
+        },
+       "sku": {
+         "name": "B1",
+         "tier": "Basic",
+         "size": "B1",
+         "capacity": 1
+        },
+       "tags": {
+          "purpose": "JuiceShopAppServicePlan"
+        }
+    },
+    {
+       "type": "Microsoft.Web/sites",
+       "apiVersion": "2022-03-01",
+       "name": "[format('OWASP-MainJump{0}', parameters('DeploymentID'))]",
+       "location": "[variables('location')]",
+       "kind": "app,linux,container",
+       "dependsOn": ["[resourceId('Microsoft.Web/serverfarms', format('ASP-FirewallVMrg-{0}', parameters('DeploymentID')))]"],
+       "properties": {
+         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('ASP-FirewallVMrg-{0}', parameters('DeploymentID')))]",
+           "siteConfig": {
+              "linuxFxVersion": "DOCKER|bkimminich/juice-shop:latest"
+            }
+        },
+        "tags": {
+        "purpose": "OWASP-Main"
+        }
+    },
+    {
+       "type": "Microsoft.Web/sites",
+       "apiVersion": "2022-03-01",
+       "name": "[format('OWASP-Stage{0}', parameters('DeploymentID'))]",
+       "location": "[variables('location')]",
+       "kind": "app,linux,container",
+       "dependsOn": ["[resourceId('Microsoft.Web/serverfarms', format('ASP-FirewallVMrg-{0}', parameters('DeploymentID')))]"],
+       "properties": {
+       "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('ASP-FirewallVMrg-{0}', parameters('DeploymentID')))]",
+       "siteConfig": {
+         "linuxFxVersion": "DOCKER|bkimminich/juice-shop:latest"
+        }
+      },
+      "tags": {
+       "purpose": "OWASP-Stage"
+      }
+    }
+	],
+  "outputs": {
+    "JumpVM Admin Username": {
+      "type": "String",
+      "value": "[parameters('vmAdminUsername')]"
+    },
+    "JumpVM Admin Password": {
+      "type": "String",
+      "value": "[parameters('vmAdminPassword')]"
+    },
+    "Trainer Password": {
+      "type": "string",
+      "value": "[parameters('trainerUserPassword')]"
+    },
+    "JumpVM DNS Name": {
+      "type": "String",
+      "value": "[concat(variables('vmPublicIpDnsName'), '.', resourceGroup().location, '.cloudapp.azure.com')]"
+    },
+    "Region": {
+      "type": "string",
+      "value": "[resourceGroup().location]"
+    },
+    "Deployment ID": {
+      "type": "String",
+      "value": "[parameters('DeploymentID')]"
+    },
+    "Trainer Username": {
+      "type": "String",
+      "value": "[parameters('trainerUserName')]"
+    }
+  }
+} 
