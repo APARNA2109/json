@@ -19,7 +19,7 @@
   "variables": {
     "OpenAIAccountName": "[concat(parameters('accounts_AIAgentOpenAI_name'), '-', parameters('DeploymentID'))]",
     "ModelName": "gpt-5",
-    "DeploymentType": "Standard",
+    "DeploymentType": "GlobalStandard",
     "Capacity": 10,
     "location": "[resourceGroup().location]",
     "vmSize": "Standard_B4als_v2",
