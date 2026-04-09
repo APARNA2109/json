@@ -72,7 +72,7 @@
         "model": {
           "format": "OpenAI",
           "name": "[variables('ModelName')]",
-          "version": "latest"
+          "version": "2025-08-07"
         },
         "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
         "raiPolicyName": "Microsoft.DefaultV2"
