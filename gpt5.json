@@ -115,7 +115,7 @@
             "model": {
                 "format": "OpenAI",
                 "name": "gpt-image-1.5",
-                "version": "2025-08-01"
+                "version": "2025-12-16"
             },
             "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
             "currentCapacity": 1,
