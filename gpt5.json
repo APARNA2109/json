@@ -108,7 +108,7 @@
             "[resourceId('Microsoft.CognitiveServices/accounts/deployments', variables('OpenAIAccountName'), 'text-embedding-3-large')]"
         ],
         "sku": {
-            "name": "Standard",
+            "name": "GlobalStandard",
             "capacity": 1
         },
         "properties": {
