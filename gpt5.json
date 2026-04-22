@@ -22,7 +22,7 @@
     "DeploymentType": "GlobalStandard",
     "Capacity": 10,
     "location": "[resourceGroup().location]",
-    "vmSize": "Standard_B4als_v2",
+    "vmSize": "Standard_B4as_v2",
     "storageAccountType": "Standard_LRS",
     "publicIpAddressSku": "Standard",
     "networkSecurityGroupName": "[concat('nsg',parameters('DeploymentID'))]",
@@ -33,7 +33,7 @@
     "publicIpAddressName": "[concat('labvmip', uniqueString(resourceGroup().id))]",
     "networkInterfaceName": "[concat('nic-', parameters('DeploymentID'))]",
     "disksizeinGB": 64,
-    "imageReferenceID": "/subscriptions/453f90a2-7f36-4cf1-86a8-c0c57a6ef68a/resourceGroups/cloudlabs-mgmt-rg/providers/Microsoft.Compute/galleries/Agentic_AI/images/Agentic_AI_Ubuntu/versions/0.0.1"
+    "imageReferenceID": "/subscriptions/453f90a2-7f36-4cf1-86a8-c0c57a6ef68a/resourceGroups/cloudlabs-mgmt-rg/providers/Microsoft.Compute/galleries/Agentic_AI/images/Agentic_AI_Ubuntu/versions/Latest"
   },
   "resources": [
     {
@@ -97,6 +97,28 @@
             },
             "versionUpgradeOption": "NoAutoUpgrade",
             "currentCapacity": 120,
+            "raiPolicyName": "Microsoft.DefaultV2"
+        }
+    },
+    {
+        "type": "Microsoft.CognitiveServices/accounts/deployments",
+        "apiVersion": "2025-06-01",
+        "name": "[concat(variables('OpenAIAccountName'), '/gpt-image-1.5')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.CognitiveServices/accounts/deployments', variables('OpenAIAccountName'), 'text-embedding-3-large')]"
+        ],
+        "sku": {
+            "name": "Standard",
+            "capacity": 1
+        },
+        "properties": {
+            "model": {
+                "format": "OpenAI",
+                "name": "gpt-image-1.5",
+                "version": "2025-08-01"
+            },
+            "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+            "currentCapacity": 1,
             "raiPolicyName": "Microsoft.DefaultV2"
         }
     },
@@ -280,6 +302,10 @@
     "ModelDeploymentName-02": {
       "type": "string",
       "value": "text-embedding-3-large"
+    },
+    "ModelDeploymentName-03": {
+      "type": "string",
+      "value": "gpt-image-1.5"
     },
     "VM Admin Username": {
         "type": "String",
