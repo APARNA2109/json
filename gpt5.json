@@ -40,7 +40,7 @@
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2025-06-01",
       "name": "[variables('OpenAIAccountName')]",
-      "location": "eastus",
+      "location": "eastus2",
       "kind": "OpenAI",
       "sku": {
         "name": "S0"
