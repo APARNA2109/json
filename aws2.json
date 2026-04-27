@@ -266,10 +266,7 @@
                             "Resource": "*",
                             "Condition": {
                                 "ArnNotLike": {
-                                    "iam:PolicyARN": [
-                                        "arn:aws:iam::*:policy/UserCreationRestriction",
-                                        "arn:aws:iam::*:policy/Amazonec2FullAccess"
-                                    ]
+                                    "iam:PolicyARN": "arn:aws:iam::*:policy/Amazonec2FullAccess"
                                 }
                             }
                         },
